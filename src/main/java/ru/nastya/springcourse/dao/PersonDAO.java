@@ -1,6 +1,7 @@
 package ru.nastya.springcourse.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.nastya.springcourse.models.Person;
@@ -20,11 +21,12 @@ public class PersonDAO {
 
 
     public List<Person> index() throws SQLException {
-        return jdbcTemplate.query("SELECT * FROM people.person", new PersonMapper());
+        return jdbcTemplate.query("SELECT * FROM people.person", new BeanPropertyRowMapper<>(Person.class));
     }
 
     public Person show(int id) {
-        return jdbcTemplate.query("SELECT * FROM people.person WHERE id=?", new Object[]{id}, new PersonMapper())
+        return jdbcTemplate.query("SELECT * FROM people.person WHERE id=?", new Object[]{id},
+                        new BeanPropertyRowMapper<>(Person.class))
                 .stream().findAny().orElse(null);
 
     }
