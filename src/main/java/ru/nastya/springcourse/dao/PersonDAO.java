@@ -35,7 +35,7 @@ public class PersonDAO {
 
     public void save(Person person) {
 
-        jdbcTemplate.update("INSERT INTO people.person VALUES (1,?,?,?)",
+        jdbcTemplate.update("INSERT INTO people.person (name, age, email) VALUES (?,?,?)",
                 person.getName(), person.getAge(), person.getEmail());
 
     }
@@ -60,7 +60,7 @@ public class PersonDAO {
         List<Person> people = create1000Person();
         long before = System.currentTimeMillis();
         for (Person person : people) {
-            jdbcTemplate.update("INSERT INTO people.person VALUES (1,?,?,?)",
+            jdbcTemplate.update("INSERT INTO people.person (name, age, email) VALUES (?,?,?)",
                     person.getName(), person.getAge(), person.getEmail());
         }
 
@@ -73,14 +73,13 @@ public class PersonDAO {
         List<Person> people = create1000Person();
         long before = System.currentTimeMillis();
 
-        jdbcTemplate.batchUpdate("INSERT INTO people.person VALUES (?,?,?,?)",
+        jdbcTemplate.batchUpdate("INSERT INTO people.person (name, age, email) VALUES (?,?,?)",
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
-                        preparedStatement.setInt(1, people.get(i).getId());
-                        preparedStatement.setString(2, people.get(i).getName());
-                        preparedStatement.setInt(3, people.get(i).getAge());
-                        preparedStatement.setString(4, people.get(i).getEmail());
+                        preparedStatement.setString(1, people.get(i).getName());
+                        preparedStatement.setInt(2, people.get(i).getAge());
+                        preparedStatement.setString(3, people.get(i).getEmail());
                     }
 
                     @Override
@@ -98,7 +97,7 @@ public class PersonDAO {
     private List<Person> create1000Person() {
         List<Person> people = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
-            people.add(new Person(i, "Name" + i, 30, "test@gmail.com"));
+            people.add(new Person("Name" + i, 30, "test@gmail.com"));
 
         }
         return people;
